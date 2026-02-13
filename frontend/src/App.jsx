@@ -1,18 +1,12 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import Home from './components/Home'
+import React from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-     <div className="text-2xl font-bold text-blue-600">project changing  </div>
-      <Home />
-    </>
-  )
+    <div className="app">
+      <h1>Hello, Smart Sparx!</h1>
+      <p>Welcome to your simple React app.</p>
+    </div>
+  );
 }
 
-export default App
+export default App;
