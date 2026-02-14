@@ -1,65 +1,57 @@
 import { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    email: "",
-    password: ""
-  });
+  const handleLogin = () => {
+    const storedUser = JSON.parse(localStorage.getItem("smartUser"));
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+    if (!storedUser) return alert("No user found. Please register.");
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", form);
-
-      localStorage.setItem("token", res.data.token);
-
-      alert("Login Successful!");
-      navigate("/dashboard");
-    } catch (err) {
-      alert("Login Failed!");
-      console.log(err);
+    if (email === storedUser.email && password === storedUser.password) {
+      localStorage.setItem("isLoggedIn", "true");
+      navigate("/");
+    } else {
+      alert("Invalid credentials");
     }
   };
 
   return (
-    <div style={{ padding: "30px" }}>
-      <h2>Login</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+      <div className="bg-gray-800 p-8 rounded-xl w-96 shadow-lg">
+        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 
-      <form onSubmit={handleLogin}>
         <input
+          className="w-full p-2 mb-4 rounded bg-gray-700"
           type="email"
-          name="email"
-          placeholder="Enter Email"
-          value={form.email}
-          onChange={handleChange}
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
         />
-        <br /><br />
 
         <input
+          className="w-full p-2 mb-4 rounded bg-gray-700"
           type="password"
-          name="password"
-          placeholder="Enter Password"
-          value={form.password}
-          onChange={handleChange}
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
         />
-        <br /><br />
 
-        <button type="submit">Login</button>
-      </form>
+        <button
+          onClick={handleLogin}
+          className="w-full bg-green-500 py-2 rounded hover:bg-green-600"
+        >
+          Login
+        </button>
 
-      <p style={{ marginTop: "15px" }}>
-        Don't have account?{" "}
-        <button onClick={() => navigate("/register")}>Register</button>
-      </p>
+        <p className="mt-4 text-center">
+          Don't have an account?{" "}
+          <Link to="/register" className="text-green-400">
+            Register
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
